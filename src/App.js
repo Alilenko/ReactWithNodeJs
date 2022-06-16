@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter } from "react-router-dom";
+import { useRouter } from "./routes";
+import { useAuth } from "./hooks/auth.hook";
+import { AuthContext } from "./context/AuthContext";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import "./App.css";
+import NavBar from "./components/navBar/NavBar";
+
+const theme = createTheme();
 
 function App() {
+  const { token, login, logout, userId } = useAuth();
+  const isAuth = !!token;
+  const routes = useRouter(isAuth);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider value={{ token, login, logout, userId, isAuth }}>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          {isAuth ? <NavBar /> : null}
+          {routes}
+        </BrowserRouter>
+      </ThemeProvider>
+    </AuthContext.Provider>
   );
 }
 

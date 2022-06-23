@@ -9,11 +9,13 @@ import NavBar from "./components/navBar/NavBar";
 const theme = createTheme();
 
 function App() {
-  const { token, login, logout, userId } = useAuth();
+  const { token, login, logout, userId, userName } = useAuth();
   const isAuth = !!token;
   const routes = useRouter(isAuth);
   return (
-    <AuthContext.Provider value={{ token, login, logout, userId, isAuth }}>
+    <AuthContext.Provider
+      value={{ token, login, logout, userId, isAuth, userName }}
+    >
       <ThemeProvider theme={theme}>
         <BrowserRouter>
           {isAuth ? <NavBar /> : null}

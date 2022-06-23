@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHttp } from "../hooks/http.hook";
+import { AuthContext } from "../context/AuthContext";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -16,7 +15,9 @@ import Container from "@mui/material/Container";
 const SingUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userName, setUserName] = useState("");
   const { request, loading, error, clearError } = useHttp();
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     if (error) {
@@ -28,10 +29,17 @@ const SingUp = () => {
 
   const registerHandler = async () => {
     try {
-      const data = await request("/api/auth/register", "POST", {
+      const item = await request("/api/auth/register", "POST", {
+        email,
+        password,
+        userName,
+      });
+      const data = await request("/api/auth/login", "POST", {
         email,
         password,
       });
+      auth.login(data.token, data.userId, data.userName);
+      console.log(data);
     } catch (e) {}
   };
 
@@ -76,6 +84,18 @@ const SingUp = () => {
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="username"
+            label="Add your name"
+            type="text"
+            id="userName"
+            autoComplete="current-password"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
           />
           <Button
             onClick={registerHandler}

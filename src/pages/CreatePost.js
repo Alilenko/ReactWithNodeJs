@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { useHttp } from "../hooks/http.hook";
 import Container from "@mui/material/Container";
@@ -14,6 +15,7 @@ const CreatePost = () => {
   const { request } = useHttp();
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const navigate = useNavigate();
 
   const createPost = async () => {
     try {
@@ -23,11 +25,16 @@ const CreatePost = () => {
         {
           title,
           text,
+          userName: auth.userName,
+          owner: auth.userId,
         },
         {
           Authorization: `Bearer ${auth.token}`,
         }
       );
+      setTitle("");
+      setText("");
+      navigate("/posts");
     } catch (e) {}
   };
 
@@ -71,7 +78,7 @@ const CreatePost = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Add new post
             </Button>
           </Box>
         </CardContent>

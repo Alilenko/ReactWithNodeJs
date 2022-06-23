@@ -15,9 +15,9 @@ export const useRouter = (isAuth) => {
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreateLinks />} />
         <Route path="/posts" element={<Posts />} />
-        <Route path="/post:id" element={<Post />} />
+        <Route path="/posts/:id" element={<Post />} />
         <Route path="/createPost" element={<CreatePost />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/posts" replace />} />
       </Routes>
     );
   }
